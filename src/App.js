@@ -22,6 +22,7 @@ class App extends Component {
 
   componentDidMount = () => {
 	// GET USER INFO
+	this.getUser()
   }
 
   resetUser = () =>{

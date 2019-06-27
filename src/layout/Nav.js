@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import logo from '../logo.svg';
 import { AppBar, Toolbar, CssBaseline, useScrollTrigger, Slide, Typography, IconButton, MenuIcon, Menu, MenuItem } from '@material-ui/core/';
 import {AccountCircle} from '@material-ui/icons/';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import NavContent from './NavContent'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,41 +50,51 @@ class Nav extends Component {
     this.props.resetUser()
   }
 
-  render() {
-    let links = '';
-    if(this.props.user){
-      links = (
-          <span>
-            <a onClick={this.handleLogout}>Logout</a>
-            <Link to="/profile">Profile</Link>
-            <Link to="/add-merch">Add Merch</Link>
-          </span>
-        );
-    }
-    else {
-      links = (
-          <span>
-            <Link to="/login">Log In</Link>
-            <Link to="/signup">Sign Up</Link>
-          </span>
-        );
-    }
-    return(
-        <React.Fragment>
-          <CssBaseline />
-		      <HideOnScroll {...this.props}>
-		        <AppBar>
-		          <Toolbar>
-		            <Link to="/">Home</Link>
-		            {links}
-		          </Toolbar>
-		        </AppBar>
-		      </HideOnScroll>
-		      <Toolbar />
+//   render() {
+//     let links = '';
+//     if(this.props.user){
+//       links = (
+//           <span>
+//             <a onClick={this.handleLogout}>Logout</a>
+//             <Link to="/profile">Profile</Link>
+//             <Link to="/add-merch">Add Merch</Link>
+//           </span>
+//         );
+//     }
+//     else {
+//       links = (
+//           <span>
+//             <Typography variant="h6" >
+//             	<Link to="/login">Log In</Link>
+//           	</Typography>
+//           	<Typography variant="h6" >
+//             	<Link to="/signup">Sign Up</Link>
+//            	</Typography>
+//           </span>
+//         );
+//     }
+//     return(
+//         <React.Fragment>
+//           <CssBaseline />
+// 		      <HideOnScroll {...this.props}>
+// 		        <AppBar>
+// 		          <Toolbar>
+// 		            <Link to="/">Home</Link>
+// 		            {links}
+// 		          </Toolbar>
+// 		        </AppBar>
+// 		      </HideOnScroll>
+// 		      <Toolbar />
 
-        </React.Fragment>
-      );
-  }
+//         </React.Fragment>
+//       );
+//   }
+// }
+
+	render() {
+		return(
+		<NavContent />
+		)
+	}
 }
-
 export default Nav;

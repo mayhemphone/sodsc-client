@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
-import { Grid, TextField, MenuItem, Paper, Button, Switch, FormGroup, FormControlLabel } from '@material-ui/core/';
+import { FormControl, InputLabel, NativeSelect, Input, Grid, TextField, MenuItem, Paper, Button, Switch, FormGroup, FormControlLabel } from '@material-ui/core/';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 const useStyles = makeStyles(theme => ({
@@ -20,6 +20,13 @@ const useStyles = makeStyles(theme => ({
   menu: {
     width: 200,
   },
+  formControl: {
+  	marginTop: theme.spacing(2),
+  	minWidth: 120,
+  },
+  selectEmpty: {
+  	marginTop: theme.spacing(2),
+  }
 }));
 
 const currencies = [
@@ -119,6 +126,23 @@ export default function AddMerch() {
 				        }}
 				      />
 			      </Grid>
+			      <Grid item xs={12} sm={6} >
+			      	<FormControl fullWidth className={classes.formControl}>
+				        <InputLabel shrink htmlFor="age-native-label-placeholder">
+				          Gender
+				        </InputLabel>
+				        <NativeSelect
+				          value={values.age}
+				          onChange={handleChange('age')}
+				          input={<Input name="age" id="age-native-label-placeholder" />}
+				        >
+				          <option value="U">None</option>
+				          <option value="M">Male</option>
+				          <option value="F">Female</option>
+				          {/*<option value={30}>Thirty</option>*/}
+				        </NativeSelect>
+				      </FormControl>
+				    </Grid>
 			      <Grid item xs={12} sm={12}>
 			      	<TextField
 				        id="description"
@@ -152,7 +176,7 @@ export default function AddMerch() {
 				        id="pre_order"
 				        label="Pre-Order"
 				        type="datetime-local"
-				        defaultValue="2017-05-24T10:30"
+				        defaultValue="2009-01-01T00:00"
 				        fullWidth
 				        InputLabelProps={{
 				          shrink: true,

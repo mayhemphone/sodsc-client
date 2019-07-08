@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import {Link} from 'react-router-dom'
 
 class Profile extends Component {
   render() {
-    if(this.props.user){
+    if(localStorage.getItem('serverToken')){
       return (
           <div>
             <h2>Hello again, {this.props.user.name}!</h2>
@@ -13,7 +14,7 @@ class Profile extends Component {
     return(
       <div>
         <p>This is a profile page. You must be logged in to see it.</p>
-        <p>Would you like to <a href="/login">Log In</a> or <a href="/signup">Sign up</a>?</p>
+        <p>Would you like to <Link to="/login">Log In</Link> or <Link to="/signup">Sign up</Link>?</p>
       </div>
       );
   }

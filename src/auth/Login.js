@@ -34,7 +34,7 @@ class Login extends Component {
   }
 
   render() {
-    if(this.props.user){
+    if(localStorage.getItem('serverToken')){
       return (<Redirect to="/profile" />);
     }
     return(

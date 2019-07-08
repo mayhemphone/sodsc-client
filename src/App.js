@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import SERVER_URL from './constants/server';
 import './App.css';
@@ -11,6 +11,16 @@ import Profile from './Profile';
 import Signup from './auth/Signup';
 import AddMerch from './AddMerch'
 
+
+  function resetUser () {
+	
+	let token = localStorage.getItem('serverToken')
+	if (token) {
+		localStorage.removeItem('serverToken')
+		alert('logged out')
+		// this.setState({ user: null })
+	}
+  }
 
 class App extends Component {
   constructor(props){
@@ -25,12 +35,10 @@ class App extends Component {
 	this.getUser()
   }
 
-  resetUser = () =>{
-	this.setState({ user: null })
-  }
+
 
   getUser = () => {
-	// TODO: SEE IF THERE'S A TOKEN
+	// SEE IF THERE'S A TOKEN
 	// IF THERE IS, TRY TO GET USER INFO
 	let token = localStorage.getItem('serverToken')
 	if (token){
@@ -83,3 +91,7 @@ class App extends Component {
 }
 
 export default App;
+
+export {
+	resetUser
+}

@@ -1,10 +1,14 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, CssBaseline, useScrollTrigger, Slide, Typography, IconButton, MenuIcon, Menu, MenuItem } from '@material-ui/core/';
+import { Link, Redirect } from 'react-router-dom';
+import { AppBar, FormGroup, FormControlLabel, Switch, Toolbar, CssBaseline, useScrollTrigger, Slide, Typography, IconButton, Menu, MenuItem } from '@material-ui/core/';
 import {AccountCircle} from '@material-ui/icons/';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import NavContent from './NavContent'
+import MenuIcon from '@material-ui/icons/Menu';
+import { resetUser } from '../App'
+
+
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -39,57 +43,94 @@ HideOnScroll.propTypes = {
   window: PropTypes.func,
 };
 
+
+function NavContent() {
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const token = localStorage.getItem('serverToken') ? true : false
+
+  function handleMenu(event) {
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose() {
+    setAnchorEl(null);
+  }
+
+  function handleLogout (e) {
+    e.preventDefault();
+    // TODO: REMOVE LS TOKEN; UPDATE PARENT STATE
+    // localStorage.removeItem('serverToken')
+    resetUser()
+    handleClose()
+    
+  }
+
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Toolbar>
+          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="Menu">
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" className={classes.title}>
+            <Link to="/profile">Profile</Link>
+          </Typography>
+          <Typography variant="h6" className={classes.title}>
+            <Link to="/add-merch">Add Merch</Link>
+          </Typography>
+          {token && (
+            <div>
+              <IconButton
+                aria-label="Account of current user"
+                aria-controls="menu-appbar"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={open}
+                onClose={handleClose}
+              >
+                <MenuItem onClick={handleClose}><Link to="/profile">Profile</Link></MenuItem>
+                <MenuItem onClick={handleLogout}>Log Out</MenuItem>
+                
+              </Menu>
+            </div>
+          )}
+          {!token && (
+          	<Typography variant="h6" className={classes.title}>
+            	<Link to="/login">Login</Link>
+          	</Typography>
+          )}
+        </Toolbar>
+      </AppBar>
+    </div>
+  );
+}
+
+
+
+
 class Nav extends Component {
 
 
 
-  handleLogout = (e) => {
-    e.preventDefault();
-    // TODO: REMOVE LS TOKEN; UPDATE PARENT STATE
-    localStorage.removeItem('serverToken')
-    this.props.resetUser()
-  }
 
-//   render() {
-//     let links = '';
-//     if(this.props.user){
-//       links = (
-//           <span>
-//             <a onClick={this.handleLogout}>Logout</a>
-//             <Link to="/profile">Profile</Link>
-//             <Link to="/add-merch">Add Merch</Link>
-//           </span>
-//         );
-//     }
-//     else {
-//       links = (
-//           <span>
-//             <Typography variant="h6" >
-//             	<Link to="/login">Log In</Link>
-//           	</Typography>
-//           	<Typography variant="h6" >
-//             	<Link to="/signup">Sign Up</Link>
-//            	</Typography>
-//           </span>
-//         );
-//     }
-//     return(
-//         <React.Fragment>
-//           <CssBaseline />
-// 		      <HideOnScroll {...this.props}>
-// 		        <AppBar>
-// 		          <Toolbar>
-// 		            <Link to="/">Home</Link>
-// 		            {links}
-// 		          </Toolbar>
-// 		        </AppBar>
-// 		      </HideOnScroll>
-// 		      <Toolbar />
-
-//         </React.Fragment>
-//       );
-//   }
-// }
 
 	render() {
 		return(

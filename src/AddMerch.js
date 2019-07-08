@@ -29,38 +29,36 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const currencies = [
-  {
-    value: 'USD',
-    label: '$',
-  },
-  {
-    value: 'EUR',
-    label: '€',
-  },
-  {
-    value: 'BTC',
-    label: '฿',
-  },
-  {
-    value: 'JPY',
-    label: '¥',
-  },
-];
-
 export default function AddMerch() {
   const classes = useStyles();
   const [values, setValues] = React.useState({
-    name: 'Cat in the Hat',
-    age: '',
-    multiline: 'Controlled',
-    currency: 'EUR',
+    item: '',
+    price: '',
+    category: '',
+    collection: '',
+    color: '',
+    sex: '',
+    description: '',
+    imgs: '',
+    'pre_order': '',
+    'no_size': false,
+    'members_only': false,
+    active: true,
+
+
   });
 
   const handleChange = name => event => {
     setValues({ ...values, [name]: event.target.value });
+    console.log(values)
   };
+	
+	const handleSwitchChange = name => event => {
+    setValues({ ...values, [name]: event.target.checked });
+    console.log(values.no_size)
 
+  };
+  
   return (
   	<Grid
 		  container
@@ -80,6 +78,8 @@ export default function AddMerch() {
 				        InputLabelProps={{
 				          shrink: true,
 				        }}
+				        value={values.item}
+				        onChange={handleChange('item')}
 				      />
 			      </Grid>
 			      <Grid item xs={12} sm={2}> 
@@ -91,6 +91,8 @@ export default function AddMerch() {
 				        InputLabelProps={{
 				          shrink: true,
 				        }}
+				        value={values.price}
+				        onChange={handleChange('price')}
 				      />
 			      </Grid>
 			      <Grid item xs={12} sm={6} > 
@@ -102,6 +104,8 @@ export default function AddMerch() {
 				        InputLabelProps={{
 				          shrink: true,
 				        }}
+				        value={values.category}
+				        onChange={handleChange('category')}
 				      />
 				    </Grid>
 			      <Grid item xs={12} sm={6} > 
@@ -113,33 +117,34 @@ export default function AddMerch() {
 				        InputLabelProps={{
 				          shrink: true,
 				        }}
+				        value={values.collection}
+				        onChange={handleChange('collection')}
 				      />
 			      </Grid>
 			      <Grid item xs={12} sm={6} > 
 				      <TextField
-				        id="color"
-				        label="Color"
-				        fullWidth
+				        id="standard-color"
+				        label="color"
+				        className={classes.textField}
+				        value={values.color}
+				        onChange={handleChange('color')}
 				        margin="normal"
-				        InputLabelProps={{
-				          shrink: true,
-				        }}
 				      />
 			      </Grid>
 			      <Grid item xs={12} sm={6} >
 			      	<FormControl fullWidth className={classes.formControl}>
-				        <InputLabel shrink htmlFor="age-native-label-placeholder">
+				        <InputLabel shrink htmlFor="sex-native-label-placeholder">
 				          Gender
 				        </InputLabel>
+				        {/*seems behind a move each time*/}
 				        <NativeSelect
-				          value={values.age}
-				          onChange={handleChange('age')}
-				          input={<Input name="age" id="age-native-label-placeholder" />}
+				          value={values.sex}
+				          onChange={handleChange('sex')}
+				          input={<Input name="sex" id="sex-native-label-placeholder" />}
 				        >
 				          <option value="U">None</option>
 				          <option value="M">Male</option>
 				          <option value="F">Female</option>
-				          {/*<option value={30}>Thirty</option>*/}
 				        </NativeSelect>
 				      </FormControl>
 				    </Grid>
@@ -149,8 +154,8 @@ export default function AddMerch() {
 				        label="Description"
 				        multiline
 				        rowsMax="4"
-				        value={values.multiline}
-				        onChange={handleChange('multiline')}
+				        value={values.description}
+				        onChange={handleChange('description')}
 				        margin="normal"
 				        fullWidth
 				      />
@@ -176,18 +181,38 @@ export default function AddMerch() {
 				        id="pre_order"
 				        label="Pre-Order"
 				        type="datetime-local"
-				        defaultValue="2009-01-01T00:00"
 				        fullWidth
 				        InputLabelProps={{
 				          shrink: true,
 				        }}
+				        value={values.pre_order}
+				        onChange={handleChange('pre_order')}
 				      />
 				    </Grid>
 				    <Grid item xs={12} sm={10}>
 					    <FormGroup row>
-					       <FormControlLabel control={<Switch value="checkedC" />} label="No Size" />
-					       <FormControlLabel control={<Switch value="checkedC" />} label="Members Only" />
-					       <FormControlLabel control={<Switch value="checkedC" />} label="Active" />
+					      <FormControlLabel control={
+					       	<Switch 
+					       		checked={values.no_size}
+					       		value={values.no_size}
+				        		onChange={handleSwitchChange('no_size')}
+					       	/>
+					     	} label="No Size" />
+					     	<FormControlLabel control={
+					       	<Switch 
+					       		checked={values.members_only}
+					       		value={values.members_only}
+				        		onChange={handleSwitchChange('members_only')}
+					       	/>
+					     	} label="Members Only" />
+					     	<FormControlLabel control={
+					       	<Switch 
+					       		checked={values.active}
+					       		value={values.active}
+				        		onChange={handleSwitchChange('active')}
+					       	/>
+					     	} label="Active" />
+
 					    </FormGroup>
 					  </Grid>
 					  <Grid item xs={12} sm={2} container justify="flex-end">

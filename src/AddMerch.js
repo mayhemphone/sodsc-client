@@ -1,8 +1,20 @@
 import React from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { FormControl, InputLabel, NativeSelect, Input, Grid, TextField, MenuItem, Paper, Button, Switch, FormGroup, FormControlLabel } from '@material-ui/core/';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
+//gallery
+import MobileStepper from '@material-ui/core/MobileStepper';
+import Typography from '@material-ui/core/Typography';
+import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
+import SwipeableViews from 'react-swipeable-views';
+import { autoPlay } from 'react-swipeable-views-utils';
+
+
+const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
+
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -26,8 +38,83 @@ const useStyles = makeStyles(theme => ({
   },
   selectEmpty: {
   	marginTop: theme.spacing(2),
-  }
+  },
+  // gallery
+  root: {
+    maxWidth: '100%',
+    flexGrow: 1,
+  },
+  img: {
+    display: 'block',
+    maxWidth: '100%',
+    overflow: 'hidden',
+    width: '100%',
+
+  },
 }));
+
+//gallery 
+
+function SwipeableTextMobileStepper(props) {
+
+	
+  const classes = useStyles();
+  const theme = useTheme();
+  const [activeStep, setActiveStep] = React.useState(0);
+  const maxSteps = props.values.imgs.length;
+
+  function handleNext() {
+    setActiveStep(prevActiveStep => prevActiveStep + 1);
+  }
+
+  function handleBack() {
+    setActiveStep(prevActiveStep => prevActiveStep - 1);
+  }
+
+  function handleStepChange(step) {
+    setActiveStep(step);
+  }
+
+  return (
+    <div className={classes.root}>
+      <AutoPlaySwipeableViews
+        axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+        index={activeStep}
+        onChangeIndex={handleStepChange}
+        enableMouseEvents
+      >
+        {props.values.imgs.map((step, index) => (
+          <div key={step}>
+            {Math.abs(activeStep - index) <= 2 ? (
+              <img className={classes.img} src={step} alt={step} />
+            ) : null}
+          </div>
+        ))}
+      </AutoPlaySwipeableViews>
+      <MobileStepper
+        steps={maxSteps}
+        position="static"
+        variant="text"
+        activeStep={activeStep}
+        nextButton={
+          <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
+            Next
+            {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
+          </Button>
+        }
+        backButton={
+          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+            {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
+            Back
+          </Button>
+        }
+      />
+    </div>
+  );
+}
+
+
+// add merch page
 
 export default function AddMerch() {
   const classes = useStyles();
@@ -37,12 +124,12 @@ export default function AddMerch() {
     category: '',
     collection: '',
     color: '',
-    sex: '',
+    sex: 'u',
     description: '',
-    imgs: '',
-    'pre_order': '',
-    'no_size': false,
-    'members_only': false,
+    imgs: [],
+    pre_order: '',
+    no_size: false,
+    members_only: false,
     active: true,
 
 
@@ -58,7 +145,43 @@ export default function AddMerch() {
     console.log(values.no_size)
 
   };
-  
+
+
+  //cloudinary
+
+  // using urls to store all of the image resultEvents.  
+  // It was not concatinating them when done directly
+  let urls = []
+
+	function checkUploadResult (resultEvent) {
+		
+		if (resultEvent.event === 'success') {
+			urls = urls.concat(resultEvent.info.secure_url)
+			setValues({ ...values, imgs: [...values.imgs.concat(urls) ] })
+		}
+	}
+	//cloudinary
+	function showWidget (widget) {
+			window.cloudinary.openUploadWidget({
+		  cloudName: 'mayhemphone', 
+		  uploadPreset: 'sodsc-unsigned',
+		  folder: 'sodsc-dev/merch'
+		}, 
+		  (error, result) => {checkUploadResult(result)}
+		)
+	}
+
+	let gallery 
+	if (values.imgs.length !== 0){
+		gallery=(<SwipeableTextMobileStepper values={values} /> )
+	} else {
+		gallery=(<h5>No images uploaded yet.</h5>)
+	}
+
+	function submitForm (){
+		console.log('Submitting:', values)
+	}
+
   return (
   	<Grid
 		  container
@@ -123,12 +246,15 @@ export default function AddMerch() {
 			      </Grid>
 			      <Grid item xs={12} sm={6} > 
 				      <TextField
-				        id="standard-color"
-				        label="color"
-				        className={classes.textField}
+				        id="color"
+				        label="Color"
+				        fullWidth
+				        margin="normal"
+				        InputLabelProps={{
+				          shrink: true,
+				        }}
 				        value={values.color}
 				        onChange={handleChange('color')}
-				        margin="normal"
 				      />
 			      </Grid>
 			      <Grid item xs={12} sm={6} >
@@ -161,7 +287,7 @@ export default function AddMerch() {
 				      />
 			      </Grid>
 			      <Grid item xs={12} sm={12}>
-			      	<Button fullWidth variant="contained" color="primary" >
+			      	<Button fullWidth variant="contained" color="primary" onClick={showWidget}>
 				        Upload Merch Images &nbsp;
 				        <CloudUploadIcon className={classes.rightIcon} />
 				      </Button>
@@ -170,7 +296,7 @@ export default function AddMerch() {
 			      	<Paper style={{ backgroundColor:'#eee', minHeight:'300px'}} >
 				      	<Grid container direction="row" justify="center" alignItems="center">
 				      		<Grid item >
-			      				<h5>Uploaded images render here.  Flipper maybe?</h5>
+			      				{gallery}
 		      				</Grid>
 	      				</Grid>
 			      	</Paper>
@@ -216,7 +342,7 @@ export default function AddMerch() {
 					    </FormGroup>
 					  </Grid>
 					  <Grid item xs={12} sm={2} container justify="flex-end">
-					  	<Button fullWidth variant="contained" color="primary" >
+					  	<Button fullWidth variant="contained" color="primary" onClick={submitForm}>
 				        Create
 				      </Button>
 						</Grid>			    

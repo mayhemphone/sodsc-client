@@ -4,6 +4,11 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import { FormControl, InputLabel, NativeSelect, Input, Grid, TextField, MenuItem, Paper, Button, Switch, FormGroup, FormControlLabel } from '@material-ui/core/';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
+import SERVER_URL from './constants/server';
+
+import axios from 'axios';
+
+
 //gallery
 import MobileStepper from '@material-ui/core/MobileStepper';
 import Typography from '@material-ui/core/Typography';
@@ -122,7 +127,7 @@ export default function AddMerch() {
     item: '',
     price: '',
     category: '',
-    collection: '',
+    collect: '',
     color: '',
     sex: 'u',
     description: '',
@@ -180,6 +185,25 @@ export default function AddMerch() {
 
 	function submitForm (){
 		console.log('Submitting:', values)
+		// make axios call here
+
+		// e.preventDefault()
+    let token = localStorage.getItem('serverToken');
+    // SEND DATA TO SERVER
+    axios.post(`${SERVER_URL}/merch`, values, {
+      headers: {
+        'Authorization' : `Bearer ${token}`
+      }
+    })
+    .then(response => {
+    	console.log('merch post response', response)
+    	// this.props.componentReload()
+
+    })
+    .catch(error => {
+      console.log('error', error)
+    })
+
 	}
 
   return (
@@ -189,7 +213,7 @@ export default function AddMerch() {
 		  justify="center"
 		>
 			<Grid item xs={10}>
-			<h1 style={{textAlign:'left'}}>Create Merch Item</h1>
+			<h1 style={{textAlign:'left'}}>New Merch Item</h1>
 		    <form className={classes.container} noValidate autoComplete="off">
 		      <Grid container spacing={4} >
 		      	<Grid item xs={12} sm={10} > 
@@ -233,15 +257,15 @@ export default function AddMerch() {
 				    </Grid>
 			      <Grid item xs={12} sm={6} > 
 				      <TextField
-				        id="collection"
+				        id="collect"
 				        label="Collection"
 				        fullWidth
 				        margin="normal"
 				        InputLabelProps={{
 				          shrink: true,
 				        }}
-				        value={values.collection}
-				        onChange={handleChange('collection')}
+				        value={values.collect}
+				        onChange={handleChange('collect')}
 				      />
 			      </Grid>
 			      <Grid item xs={12} sm={6} > 

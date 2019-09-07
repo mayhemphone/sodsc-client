@@ -106,6 +106,8 @@ function NavContent() {
                 open={open}
                 onClose={handleClose}
               >
+                <MenuItem onClick={handleClose}><Link to="/add-merch">New Merch Item</Link></MenuItem>
+
                 <MenuItem onClick={handleClose}><Link to="/profile">Profile</Link></MenuItem>
                 <MenuItem onClick={handleLogout}>Log Out</MenuItem>
                 
@@ -113,9 +115,14 @@ function NavContent() {
             </div>
           )}
           {!token && (
-          	<Typography variant="h6" className={classes.title}>
-            	<Link to="/login">Login</Link>
-          	</Typography>
+          	<React.Fragment>
+	          	<Typography variant="h6" className={classes.title}>
+	            	<Link to="/login">Login</Link>
+	          	</Typography>
+	          	<Typography variant="h6" className={classes.title}>
+	            	<Link to="/signup">Signup</Link>
+	          	</Typography>
+	         	</React.Fragment>
           )}
         </Toolbar>
       </AppBar>

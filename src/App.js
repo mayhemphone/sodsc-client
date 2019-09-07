@@ -53,7 +53,7 @@ class App extends Component {
 		})
 		.catch((err) => {
 			console.log('Error in POST /signup', err)
-			this.resetUser() 
+			resetUser() 
 		})
 	} else {
 		console.log(('No token'))
